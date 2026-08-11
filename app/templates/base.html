@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Suivi de Colis & Logistique{% endblock %}</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0A192F',
+                        brandBlue: '#1E40AF',
+                        brandOrange: '#F59E0B'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="flex flex-col min-h-full font-sans text-gray-800 bg-gray-50">
+
+<!-- NAVBAR MAIN -->
+<nav class="bg-navy text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16 md:h-20">
+            
+            <!-- LOGO & NOM -->
+            <div class="flex items-center space-x-3">
+                <a href="{{ url_for('main.index') }}" class="flex items-center space-x-2 text-lg md:text-xl font-black tracking-wider text-white">
+                    <img src="{{ url_for('static', filename='images/logo.jpg') }}" 
+                         alt="Fricko Delivery Logo" 
+                         class="h-8 md:h-10 w-auto object-contain rounded-lg border border-white/20">
+                    <span>Fricko<span class="text-brandOrange"> Delivery</span></span>
+                </a>
+            </div>
+
+            <!-- NAVIGATION DESKTOP -->
+            <div class="hidden lg:flex items-center space-x-6">
+                <a href="{{ url_for('main.index') }}" class="text-gray-300 hover:text-white text-sm font-medium transition">Accueil</a>
+                <a href="{{ url_for('main.index') }}#services" class="text-gray-300 hover:text-white text-sm font-medium transition">Services</a>
+                <a href="{{ url_for('main.index') }}#comment-ca-marche" class="text-gray-300 hover:text-white text-sm font-medium transition">Comment ça marche</a>
+                <a href="{{ url_for('main.index') }}#villes-desservies" class="text-gray-300 hover:text-white text-sm font-medium transition">Nos Villes</a>
+                <a href="{{ url_for('main.index') }}#a-propos" class="text-gray-300 hover:text-white text-sm font-medium transition">À Propos</a>
+                <a href="{{ url_for('main.index') }}#contact" class="text-gray-300 hover:text-white text-sm font-medium transition">Contact</a>
+
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('main.dashboard') }}" class="bg-brandBlue hover:bg-blue-800 text-white font-semibold px-4 py-2 rounded-xl text-sm transition">📦 Liste Colis</a>
+                    {% if current_user.is_admin %}
+                        <a href="{{ url_for('main.clients_list') }}" class="text-gray-300 hover:text-white text-sm font-medium transition">👥 Clients</a>
+                        <a href="{{ url_for('main.voyages_list') }}" class="text-gray-300 hover:text-white text-sm font-medium transition">🚢 Voyages</a>
+                        <a href="{{ url_for('main.users_list') }}" class="text-gray-300 hover:text-white text-sm font-medium transition">⚙️ Utilisateurs</a>
+                    {% endif %}
+                    <a href="{{ url_for('main.logout') }}" class="text-red-400 hover:text-red-300 text-sm font-medium transition">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('main.login') }}" class="bg-brandOrange text-navy font-bold px-5 py-2 rounded-xl text-sm transition">CONNEXION</a>
+                {% endif %}
+            </div>
+
+            <!-- BOUTON MENU MOBILE -->
+            <div class="lg:hidden flex items-center">
+                <button type="button" 
+                        onclick="toggleMobileMenu()" 
+                        class="text-gray-300 hover:text-white focus:outline-none p-1.5 rounded-lg bg-navy-light cursor-pointer">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENU MOBILE : COMPACT, EN HAUT À DROITE -->
+    <div id="mobile-menu" class="hidden lg:hidden absolute top-full right-4 w-60 bg-navy border border-gray-700 rounded-xl px-4 py-3 space-y-1 shadow-2xl z-50">
+        <a href="{{ url_for('main.index') }}" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-white py-1 text-xs font-medium">Accueil</a>
+        <a href="{{ url_for('main.index') }}#comment-ca-marche" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-white py-1 text-xs font-medium">Suivi de colis</a>
+        <a href="{{ url_for('main.index') }}#villes-desservies" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-white py-1 text-xs font-medium">Nos Villes</a>
+        <a href="{{ url_for('main.index') }}#a-propos" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-white py-1 text-xs font-medium">À Propos</a>
+        <a href="{{ url_for('main.index') }}#contact" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-white py-1 text-xs font-medium">Contact</a>
+
+        <hr class="border-gray-800 my-1">
+
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('main.dashboard') }}" onclick="toggleMobileMenu()" class="block text-white font-bold py-1 text-xs">📦 Liste Colis ({{ current_user.nom }})</a>
+            {% if current_user.is_admin %}
+                <a href="{{ url_for('main.clients_list') }}" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-white py-1 text-xs">👥 Clients</a>
+                <a href="{{ url_for('main.voyages_list') }}" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-white py-1 text-xs">🚢 Voyages</a>
+                <a href="{{ url_for('main.users_list') }}" onclick="toggleMobileMenu()" class="block text-gray-300 hover:text-white py-1 text-xs">⚙️ Utilisateurs</a>
+            {% endif %}
+            <a href="{{ url_for('main.logout') }}" class="block text-red-400 py-1 text-xs font-medium">Déconnexion</a>
+        {% else %}
+            <a href="{{ url_for('main.login') }}" class="block bg-brandOrange text-navy font-bold text-center py-1.5 rounded-lg mt-1 text-xs">CONNEXION</a>
+        {% endif %}
+    </div>
+</nav>
+
+<script>
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        if (menu) {
+            menu.classList.toggle('hidden');
+        }
+    }
+</script>
+    <!-- SYSTEME DE MESSAGES FLASH (NOTIFICATIONS) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="p-4 mb-4 rounded-2xl text-sm font-medium flex items-center justify-between shadow-sm border
+                        {% if category == 'success' %} bg-green-50 text-green-800 border-green-200
+                        {% elif category == 'danger' or category == 'error' %} bg-red-50 text-red-800 border-red-200
+                        {% elif category == 'warning' %} bg-yellow-50 text-yellow-800 border-yellow-200
+                        {% else %} bg-blue-50 text-blue-800 border-blue-200 {% endif %}">
+                        <span>{{ message }}</span>
+                        <button onclick="this.parentElement.remove()" class="text-xs font-bold px-2 py-1 opacity-60 hover:opacity-100">✕</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+
+    <!-- CONTENU PRINCIPAL DES PAGES -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ========================================== -->
+<!-- FOOTER                                     -->
+<!-- ========================================== -->
+<footer class="bg-navy text-white pt-12 pb-6 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- On ajoute text-center sur mobile et md:text-left sur écran moyen/large -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
+            
+            <!-- Colonne 1 : Logo & Info -->
+            <div class="space-y-4 md:col-span-1 flex flex-col items-center md:items-start">
+                
+                <!-- LOGO + NOM -->
+                <div class="flex items-center gap-3">
+                    <img src="{{ url_for('static', filename='images/logo.jpg') }}" 
+                         alt="Fricko Delivery Logo" 
+                         class="h-9 w-auto object-contain">
+                    
+                    <span class="text-xl font-extrabold tracking-wider text-white">
+                        Fricko <span class="text-brandBlue">Delivery</span>
+                    </span>
+                </div>
+
+                <p class="text-gray-400 text-xs leading-relaxed max-w-sm">
+                    Plateforme de suivi et de gestion logistique pour un acheminement sécurisé et rapide de vos colis.
+                </p>
+                
+                <!-- Icône et lien Facebook -->
+                <div class="pt-2">
+                    <a href="https://facebook.com/votrepagefacebook" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        Suivez-nous sur Facebook
+                    </a>
+                </div>
+            </div>
+
+            <!-- Colonne 2 : Navigation -->
+            <div>
+                <h4 class="font-bold text-sm text-white mb-4 uppercase tracking-wider">Navigation</h4>
+                <ul class="space-y-2 text-xs text-gray-400">
+                    <li><a href="{{ url_for('main.index') }}" class="hover:text-white transition">Accueil</a></li>
+                    <li><a href="{{ url_for('main.index') }}#comment-ca-marche" class="hover:text-white transition">Comment ça marche</a></li>
+                    <li><a href="{{ url_for('main.index') }}#villes-desservies" class="hover:text-white transition">Nos Villes</a></li>
+                    <li><a href="{{ url_for('main.index') }}#a-propos" class="hover:text-white transition">À propos de nous</a></li>
+                    <li><a href="#contact" class="hover:text-white transition">Nous contacter</a></li>
+                </ul>
+            </div>
+
+            <!-- Colonne 3 : Espace Membre -->
+            <div>
+                <h4 class="font-bold text-sm text-white mb-4 uppercase tracking-wider">Espace Client</h4>
+                <ul class="space-y-2 text-xs text-gray-400">
+                    {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('main.dashboard') }}" class="hover:text-white transition">Tableau de bord</a></li>
+                        <li><a href="{{ url_for('main.colis_list') }}" class="hover:text-white transition">Mes colis</a></li>
+                        <li><a href="{{ url_for('main.logout') }}" class="hover:text-red-400 transition">Se déconnecter</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('main.login') }}" class="hover:text-white transition">Se connecter</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Colonne 4 : Contact Direct -->
+            <div>
+                <h4 class="font-bold text-sm text-white mb-4 uppercase tracking-wider">Contact Direct</h4>
+                <ul class="space-y-3 text-xs text-gray-400 flex flex-col items-center md:items-start">
+                    <li class="flex items-center gap-2">
+                        <span>📞</span>
+                        <a href="tel:+50939102160" class="hover:text-white transition">+509 3910-2160</a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span>✉️</span>
+                        <a href="mailto:celysfritzgerald39@gmail.com" class="hover:text-white transition">celysfritzgerald39@gmail.com</a>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span>🌐</span>
+                        <a href="https://facebook.com/votrepagefacebook" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">Facebook : Fricko-Delivery</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Bas du footer -->
+        <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500 gap-4 text-center">
+            <p>&copy; {{ now.year if now else '2026' }} Fricko Delivery. Tous droits réservés.</p>
+            <div class="flex gap-4 justify-center">
+                <a href="{{ url_for('main.politique_confidentialite') }}" class="hover:text-gray-400 transition">Politique de confidentialité</a>
+                <a href="{{ url_for('main.conditions_utilisation') }}" class="hover:text-gray-400 transition">Conditions d'utilisation</a>            </div>
+        </div>
+    </div>
+</footer>
+
+    <!-- SCRIPT JS POUR LE MENU MOBILE -->
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        if (btn && menu) {
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+        }
+
+       
+    </script>
+</body>
+</html>

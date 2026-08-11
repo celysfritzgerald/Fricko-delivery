@@ -1,0 +1,457 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="bg-navy text-white relative overflow-hidden py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            <!-- Texe & Hero Intro -->
+            <div>
+                <span class="inline-block bg-brandBlue text-brandOrange text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider mb-4">
+                    TRANSPORT & LOGISTIQUE USA → HAÏTI
+                </span>
+                <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-tight mb-6">
+                    Votre colis, <br><span class="text-brandOrange">notre priorité.</span>
+                </h1>
+                <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                    Expédiez vos marchandises depuis les États-Unis vers Haïti en toute simplicité, sécurité et transparence.
+                </p>
+
+                <!-- FORMULAIRE TRACKING -->
+                <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-xl text-gray-800 max-w-xl">
+                    <form action="{{ url_for('main.index') }}" method="POST" class="flex flex-col sm:flex-row gap-3">
+                        {{ form.hidden_tag() }}
+                        <div class="flex-grow">
+                            {{ form.tracking_id(class="w-full px-4 py-3.5 bg-gray-100 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandBlue text-gray-900 font-medium placeholder-gray-400 text-sm", placeholder="Entrez votre Tracking ID (ex: TRK-2026-001)") }}
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full sm:w-auto bg-brandOrange hover:bg-yellow-600 text-navy font-bold px-6 py-3.5 rounded-xl transition shadow-md text-sm whitespace-nowrap">
+                                SUIVRE MON COLIS
+                            </button>
+                        </div>
+                    </form>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4 pt-4 border-t border-gray-100 text-xs text-gray-500 font-medium">
+                        <div>✓ Aucun compte requis</div>
+                        <div>✓ Suivi en ligne</div>
+                        <div>✓ 2 voyages / mois</div>
+                        <div>✓ Mis à jour en direct</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image de transporteur/navire/conteneur -->
+            <div class="hidden lg:block relative">
+                <div class="rounded-2xl overflow-hidden shadow-2xl bg-brandBlue p-2 border border-gray-700">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80" alt="Transport maritime de conteneurs" class="rounded-xl w-full h-96 object-cover">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <h2 class="font-display font-bold text-3xl text-navy">Nos Services de Transport</h2>
+            <p class="text-gray-600 mt-2">Des solutions adaptées aux particuliers et aux entreprises.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="text-4xl mb-4">📦</div>
+                <h3 class="font-display font-bold text-xl text-navy mb-2">Transport de Colis</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Expédition de petits et grands paquets personnels, nourriture, effets personnels en toute sécurité.</p>
+            </div>
+            <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="text-4xl mb-4">🚢</div>
+                <h3 class="font-display font-bold text-xl text-navy mb-2">Fret USA → Haïti</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Prise en charge de marchandises commerciales, conteneurs partagés ou complets pour vos affaires.</p>
+            </div>
+            <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 shadow-sm hover:shadow-md transition">
+                <div class="text-4xl mb-4">🏬</div>
+                <h3 class="font-display font-bold text-xl text-navy mb-2">Livraison & Retrait</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">Point de collecte sécurisé en Haïti et options de livraison à domicile dans les principales villes.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- COMMENT ÇA MARCHE -->
+<section id="comment-ca-marche" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <h2 class="font-display font-bold text-3xl text-navy">Comment ça marche ?</h2>
+            <p class="text-gray-600 mt-2">Suivez le parcours de votre marchandise en 4 étapes claires.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 text-center relative">
+                <div class="w-12 h-12 bg-brandBlue text-white font-bold rounded-xl flex items-center justify-center mx-auto mb-4 text-lg">01</div>
+                <h4 class="font-bold text-navy mb-1">Colis Reçu</h4>
+                <p class="text-xs text-gray-500">Reçu dans notre entrepôt aux États-Unis.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 text-center relative">
+                <div class="w-12 h-12 bg-brandBlue text-white font-bold rounded-xl flex items-center justify-center mx-auto mb-4 text-lg">02</div>
+                <h4 class="font-bold text-navy mb-1">En Route</h4>
+                <p class="text-xs text-gray-500">Chargé dans le navire en direction d'Haïti.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 text-center relative">
+                <div class="w-12 h-12 bg-brandBlue text-white font-bold rounded-xl flex items-center justify-center mx-auto mb-4 text-lg">03</div>
+                <h4 class="font-bold text-navy mb-1">En Haïti</h4>
+                <p class="text-xs text-gray-500">Arrivé au port et prêt pour le dédouanement.</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-green-200 bg-green-50/30 text-center relative">
+                <div class="w-12 h-12 bg-green-600 text-white font-bold rounded-xl flex items-center justify-center mx-auto mb-4 text-lg">04</div>
+                <h4 class="font-bold text-navy mb-1">Livré</h4>
+                <p class="text-xs text-gray-500">Remis en main propre au destinataire.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================== -->
+<!-- SECTION : À PROPOS DE NOUS                  -->
+<!-- ========================================== -->
+<section id="a-propos" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            
+            <!-- Texe de présentation -->
+            <div>
+                <span class="text-brandBlue font-semibold text-sm uppercase tracking-wider">À propos de nous</span>
+                <h2 class="text-3xl font-extrabold text-navy mt-2 mb-6">
+                    Votre partenaire de confiance pour la gestion logistique et le suivi de colis
+                </h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Chez <strong>LOGITRACK / Fricko-Delivery</strong>, nous simplifions l'acheminement de vos paquets et marchandises de l'entrepôt jusqu'à la destination finale. Notre mission est de fournir aux particuliers et entreprises un service de livraison fluide, rapide et totalement transparent.
+                </p>
+                <p class="text-gray-600 mb-6 leading-relaxed">
+                    Grâce à notre plateforme intégrée, nos clients peuvent suivre le statut de leurs livraisons en temps réel, garantissant sérénité et contrôle à chaque étape du voyage.
+                </p>
+                
+                <div class="flex gap-6">
+                    <div>
+                        <p class="text-3xl font-bold text-brandBlue">100%</p>
+                        <p class="text-xs text-gray-500 uppercase font-medium">Transparence</p>
+                    </div>
+                    <div class="border-l pl-6">
+                        <p class="text-3xl font-bold text-brandBlue">24/7</p>
+                        <p class="text-xs text-gray-500 uppercase font-medium">Suivi en ligne</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image illustrative / Visuel -->
+            <div class="bg-blue-50 border border-blue-100 p-8 rounded-3xl relative overflow-hidden">
+                <div class="space-y-4">
+                    <div class="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <span class="text-2xl">📦</span>
+                        <div>
+                            <p class="font-bold text-navy text-sm">Gestion centralisée</p>
+                            <p class="text-xs text-gray-500">Prise en charge de la réception jusqu'à la remise au destinataire.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <span class="text-2xl">🚚</span>
+                        <div>
+                            <p class="font-bold text-navy text-sm">Trajets réguliers</p>
+                            <p class="text-xs text-gray-500">Planification continue des voyages pour réduire les délais.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-white rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
+                        <span class="text-2xl">✅</span>
+                        <div>
+                            <p class="font-bold text-navy text-sm">Confirmation de livraison</p>
+                            <p class="text-xs text-gray-500">Mise à jour immédiate dès la réception de vos paquets.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ========================================== -->
+<!-- SECTION : POURQUOI NOUS CHOISIR            -->
+<!-- ========================================== -->
+<section id="pourquoi-nous-choisir" class="py-16 bg-gray-50 border-t border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-brandBlue font-semibold text-sm uppercase tracking-wider">Pourquoi nous choisir</span>
+            <h2 class="text-3xl font-extrabold text-navy mt-2">
+                Des avantages conçus pour simplifier vos livraisons
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- Carte 1 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-100 text-brandBlue flex items-center justify-center rounded-xl mb-6 text-2xl">
+                    🔍
+                </div>
+                <h3 class="text-lg font-bold text-navy mb-2">Suivi instantané</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    Accédez instantanément à l'état de votre colis grâce à votre numéro de tracking unique, sans avoir besoin de créer un compte.
+                </p>
+            </div>
+
+            <!-- Carte 2 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-100 text-brandBlue flex items-center justify-center rounded-xl mb-6 text-2xl">
+                    ⚡
+                </div>
+                <h3 class="text-lg font-bold text-navy mb-2">Rapidité & Efficacité</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    Vos expéditions sont organisées autour de voyages programmés pour garantir le traitement le plus rapide possible.
+                </p>
+            </div>
+
+            <!-- Carte 3 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                <div class="w-12 h-12 bg-blue-100 text-brandBlue flex items-center justify-center rounded-xl mb-6 text-2xl">
+                    🛡️
+                </div>
+                <h3 class="text-lg font-bold text-navy mb-2">Sécurité & Fiabilité</h3>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    Chaque colis est enregistré, pesé et attribué à un client unique pour éviter les pertes et garantir une livraison exacte.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- PROCHAINS VOYAGES -->
+<section id="prochains-voyages" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <h2 class="font-display font-bold text-3xl text-navy">Prochains Voyages</h2>
+            <p class="text-gray-600 mt-2">Nous organisons 2 départs par mois. Planifiez vos envois.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {% if voyages %}
+                {% for voyage in voyages %}
+                <div class="bg-navy text-white p-8 rounded-2xl shadow-lg border-l-8 border-brandOrange">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="bg-brandBlue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider text-brandOrange">
+                            {{ voyage.nom }}
+                        </span>
+                        <span class="text-xs px-2.5 py-1 rounded-md font-medium bg-gray-800 text-gray-300">
+                            {{ voyage.statut }}
+                        </span>
+                    </div>
+                    <div class="text-xl font-bold font-display mb-6 flex items-center space-x-2">
+                        <span>USA 🇺🇸</span>
+                        <span class="text-brandOrange">➔</span>
+                        <span>HAÏTI 🇭🇹</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 border-t border-gray-800 pt-4 text-sm">
+                        <div>
+                            <p class="text-gray-400 text-xs">Date de départ</p>
+                            <p class="font-semibold text-white mt-1">{{ voyage.date_depart.strftime('%d/%m/%Y') }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-xs">Arrivée estimée</p>
+                            <p class="font-semibold text-brandOrange mt-1">{{ voyage.date_arrivee_estimee.strftime('%d/%m/%Y') }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-span-2 text-center py-8 text-gray-500 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+                    Aucun voyage planifié pour le moment.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- SECTION : VILLES DESSERVIES EN HAÏTI                    -->
+<!-- ======================================================= -->
+<section id="villes-desservies" class="py-16 bg-gray-50 border-t border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- En-tête de section -->
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-brandBlue font-semibold text-sm tracking-wide uppercase">Couverture Locale</span>
+            <h2 class="text-3xl font-extrabold text-navy mt-1">Nos Villes Desservies en Haïti</h2>
+            <p class="mt-3 text-gray-600 text-sm sm:text-base">
+                Nous assurons la livraison sécurisée de vos colis et marchandises vers 6 destinations clés.
+            </p>
+        </div>
+
+        <!-- Grille des 6 Villes -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+            
+            <!-- 1. Miragoâne -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition duration-300">
+                <div class="w-12 h-12 mx-auto mb-3 bg-blue-50 text-brandBlue rounded-xl flex items-center justify-center text-xl font-bold">
+                    📍
+                </div>
+                <h3 class="font-bold text-gray-800 text-base mb-1">Miragoâne</h3>
+                <span class="inline-block px-2.5 py-0.5 bg-green-100 text-green-800 text-[10px] font-bold rounded-full">Actif</span>
+            </div>
+
+            <!-- 2. Léogâne -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition duration-300">
+                <div class="w-12 h-12 mx-auto mb-3 bg-blue-50 text-brandBlue rounded-xl flex items-center justify-center text-xl font-bold">
+                    📍
+                </div>
+                <h3 class="font-bold text-gray-800 text-base mb-1">Léogâne</h3>
+                <span class="inline-block px-2.5 py-0.5 bg-green-100 text-green-800 text-[10px] font-bold rounded-full">Actif</span>
+            </div>
+
+            <!-- 3. Les Cayes -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition duration-300">
+                <div class="w-12 h-12 mx-auto mb-3 bg-blue-50 text-brandBlue rounded-xl flex items-center justify-center text-xl font-bold">
+                    📍
+                </div>
+                <h3 class="font-bold text-gray-800 text-base mb-1">Les Cayes</h3>
+                <span class="inline-block px-2.5 py-0.5 bg-green-100 text-green-800 text-[10px] font-bold rounded-full">Actif</span>
+            </div>
+
+            <!-- 4. Jacmel -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition duration-300">
+                <div class="w-12 h-12 mx-auto mb-3 bg-blue-50 text-brandBlue rounded-xl flex items-center justify-center text-xl font-bold">
+                    📍
+                </div>
+                <h3 class="font-bold text-gray-800 text-base mb-1">Jacmel</h3>
+                <span class="inline-block px-2.5 py-0.5 bg-green-100 text-green-800 text-[10px] font-bold rounded-full">Actif</span>
+            </div>
+
+            <!-- 5. L'Asile -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition duration-300">
+                <div class="w-12 h-12 mx-auto mb-3 bg-blue-50 text-brandBlue rounded-xl flex items-center justify-center text-xl font-bold">
+                    📍
+                </div>
+                <h3 class="font-bold text-gray-800 text-base mb-1">L'Asile</h3>
+                <span class="inline-block px-2.5 py-0.5 bg-green-100 text-green-800 text-[10px] font-bold rounded-full">Actif</span>
+            </div>
+
+            <!-- 6. Aquin -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center hover:shadow-md transition duration-300">
+                <div class="w-12 h-12 mx-auto mb-3 bg-blue-50 text-brandBlue rounded-xl flex items-center justify-center text-xl font-bold">
+                    📍
+                </div>
+                <h3 class="font-bold text-gray-800 text-base mb-1">Aquin</h3>
+                <span class="inline-block px-2.5 py-0.5 bg-green-100 text-green-800 text-[10px] font-bold rounded-full">Actif</span>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- ========================================== -->
+<!-- SECTION : CONTACT                          -->
+<!-- ========================================== -->
+<section id="contact" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-brandBlue font-semibold text-sm uppercase tracking-wider">Besoin d'aide ?</span>
+            <h2 class="text-3xl font-extrabold text-navy mt-2">Contactez notre équipe</h2>
+            
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="p-4 mb-4 rounded-xl text-sm font-medium border shadow-sm {% if category == 'success' %}bg-green-50 text-green-800 border-green-200{% elif category == 'danger' %}bg-red-50 text-red-800 border-red-200{% else %}bg-blue-50 text-blue-800 border-blue-200{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+            <p class="text-gray-500 text-sm mt-2">Une question sur votre colis ou nos services ? N'hésitez pas à nous envoyer un message.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- Informations de contact (Cartes) -->
+            <div class="space-y-4 md:col-span-1">
+                <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100 flex items-start gap-4">
+                    <div class="w-10 h-10 bg-blue-100 text-brandBlue flex items-center justify-center rounded-xl text-xl flex-shrink-0">
+                        📞
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-navy text-sm">Téléphone</h4>
+                        <p class="text-xs text-gray-500 mt-1">Du lundi au samedi, 8h - 18h</p>
+                        <a href="tel:{{company_phone.replace(' ', '')}}" class="text-sm font-semibold text-brandBlue hover:underline block mt-1">{{company_phone}}</a>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100 flex items-start gap-4">
+                    <div class="w-10 h-10 bg-blue-100 text-brandBlue flex items-center justify-center rounded-xl text-xl flex-shrink-0">
+                        ✉️
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-navy text-sm">Adresse Email</h4>
+                        <p class="text-xs text-gray-500 mt-1">Réponse sous 24h ouvrées</p>
+                        <a href="mailto:{{company_email}}" class="text-sm font-semibold text-brandBlue hover:underline block mt-1">{{company_email}}</a>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100 flex items-start gap-4">
+                    <div class="w-10 h-10 bg-blue-100 text-brandBlue flex items-center justify-center rounded-xl text-xl flex-shrink-0">
+                        📍
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-navy text-sm">Siège Social</h4>
+                        <p class="text-xs text-gray-500 mt-1">Debas, Aquin, Sud, Haïti</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulaire de contact rapide -->
+            <div class="bg-gray-50 p-8 rounded-3xl border border-gray-100 md:col-span-2">
+<form action="{{ url_for('main.handle_contact') }}" method="POST" class="space-y-4">    <!-- Jeton CSRF de sécurité si vous utilisez Flask-WTF -->
+    {% if csrf_token %}
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% endif %}
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Nom Complet *</label>
+            <input type="text" name="nom" required maxlength="100" placeholder="Votre nom" 
+                   class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue">
+        </div>
+        <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">Adresse Email *</label>
+            <input type="email" name="email" required maxlength="100" placeholder="votre@email.com" 
+                   class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue">
+        </div>
+    </div>
+
+    <div>
+        <label class="block text-xs font-semibold text-gray-700 mb-1">Sujet</label>
+        <input type="text" name="sujet" maxlength="150" placeholder="Demande d'information..." 
+               class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue">
+    </div>
+
+    <div>
+        <label class="block text-xs font-semibold text-gray-700 mb-1">Message *</label>
+        <textarea name="message" rows="4" required maxlength="2000" placeholder="Écrivez votre message ici..." 
+                  class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue"></textarea>
+    </div>
+
+    <button type="submit" class="bg-brandBlue text-white font-semibold px-6 py-3 rounded-xl hover:bg-blue-800 transition text-sm w-full sm:w-auto">
+        Envoyer le message
+    </button>
+</form>
+<p class="text-xs text-gray-500 mt-2">
+    En validant ce formulaire, vous acceptez nos 
+    <a href="{{ url_for('main.conditions_utilisation') }}" class="underline text-brandBlue" target="_blank">Conditions d'Utilisation</a> 
+    et notre 
+    <a href="{{ url_for('main.politique_confidentialite') }}" class="underline text-brandBlue" target="_blank">Politique de Confidentialité</a>.
+</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

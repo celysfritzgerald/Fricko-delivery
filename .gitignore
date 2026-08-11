@@ -1,0 +1,40 @@
+# Python / Environnements virtuels
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+instance/
+pytest_cache/
+
+# Fichiers de configuration sensibles
+.env
+.env.*
+!.env.example
+
+# Base de données SQLite locale
+*.db
+*.sqlite3
+app.db
+
+# IDE / Éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs et Tests
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+Extrait de code
+
+
+# Cache Pytest & Couverture de code
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.cover

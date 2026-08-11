@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de Bord | LOGITRACK{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-navy">Tableau de Bord</h1>
+        <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-medium">
+            Rôle : <strong class="text-brandBlue">{{ current_user.role }}</strong>
+        </span>
+    </div>
+
+    <!-- STATISTIQUES GLOBALES (RÉSERVÉES AUX ADMINS) -->
+    {% if current_user.is_admin and stats %}
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <p class="text-sm text-gray-500">Total Colis</p>
+            <p class="text-2xl font-bold text-navy">{{ stats.total_colis }}</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <p class="text-sm text-gray-500">Total Voyages</p>
+            <p class="text-2xl font-bold text-navy">{{ stats.total_voyages }}</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <p class="text-sm text-gray-500">En Attente</p>
+            <p class="text-2xl font-bold text-yellow-600">{{ stats.colis_en_attente }}</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <p class="text-sm text-gray-500">Livrés</p>
+            <p class="text-2xl font-bold text-green-600">{{ stats.colis_livres }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- LISTE DES COLIS (ACCESSIBLE À TOUS LES UTILISATEURS) -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+            <h2 class="text-lg font-bold text-navy">📦 Liste des Colis</h2>
+            
+            <!-- BOUTON AJOUTER : ADMIN UNIQUEMENT -->
+            {% if current_user.is_admin %}
+            <a href="{{ url_for('main.colis_create') }}" class="bg-brandBlue text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-800 transition">
+                + Nouveau Colis
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- FORMULAIRE DE RECHERCHE -->
+        <form method="GET" action="{{ url_for('main.dashboard') }}" class="mb-6">
+            <div class="flex gap-2">
+                <input type="text" name="search" value="{{ search_query }}" placeholder="Rechercher par numéro de suivi..." class="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue">
+                <button type="submit" class="bg-navy text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-opacity-90 transition">
+                    Filtrer
+                </button>
+            </div>
+        </form>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-600">
+                <thead class="bg-gray-50 text-gray-700 uppercase text-xs">
+                    <tr>
+                        <th class="p-3">Tracking ID</th>
+                        <th class="p-3">Client</th>
+                        <th class="p-3">Description</th>
+                        <th class="p-3">Poids</th>
+                        <th class="p-3">Statut</th>
+                        <th class="p-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for colis in colis_list %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3 font-mono font-bold text-brandBlue">{{ colis.tracking_id }}</td>
+                        <td class="p-3 font-medium text-gray-900">{{ colis.client.prenom }} {{ colis.client.nom }}</td>
+                        <td class="p-3">{{ colis.description }}</td>
+                        <td class="p-3">{{ colis.poids or '-' }} lbs</td>
+                        <td class="p-3">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold
+                                {% if colis.statut_livraison == 'LIVRE' %} bg-green-100 text-green-800
+                                {% elif colis.statut_livraison in ['EN_ROUTE', 'EN_TRANSIT'] %} bg-blue-100 text-blue-800
+                                {% elif colis.statut_livraison in ['EN_HAITI', 'ARRIVE'] %} bg-purple-100 text-purple-800
+                                {% else %} bg-yellow-100 text-yellow-800 {% endif %}">
+                                {{ colis.statut_livraison }}
+                            </span>
+                        </td>
+                        <td class="p-3">
+                            {% if current_user.is_admin %}
+                                <a href="{{ url_for('main.colis_edit', id=colis.id) }}" class="text-brandBlue font-semibold hover:underline">Modifier</a>
+                            {% else %}
+                                <a href="{{ url_for('main.colis_edit', id=colis.id) }}" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1.5 rounded-lg transition">Changer statut</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="p-4 text-center text-gray-400">Aucun colis trouvé.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TABLE DES CLIENTS RÉCENTS (ADMIN UNIQUEMENT) -->
+    {% if current_user.is_admin and clients_list %}
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-navy">👥 Clients Récents</h2>
+            <a href="{{ url_for('main.clients_list') }}" class="text-sm text-brandBlue font-semibold hover:underline">Voir tous les clients →</a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-gray-600">
+                <thead class="bg-gray-50 text-gray-700 uppercase text-xs">
+                    <tr>
+                        <th class="p-3">Nom Complet</th>
+                        <th class="p-3">Téléphone</th>
+                        <th class="p-3">Email</th>
+                        <th class="p-3">Adresse</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients_list %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3 font-semibold text-gray-900">{{ client.prenom }} {{ client.nom }}</td>
+                        <td class="p-3">{{ client.telephone }}</td>
+                        <td class="p-3">{{ client.email or '-' }}</td>
+                        <td class="p-3">{{ client.adresse or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

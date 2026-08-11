@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <a href="{{ url_for('main.index') }}" class="inline-flex items-center text-sm font-medium text-brandBlue hover:text-navy mb-6">
+        ← Retour à l'accueil
+    </a>
+
+    {% if colis %}
+        <!-- CARTE PRINCIPALE DETAILS DU COLIS -->
+        <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden mb-8">
+            
+            <!-- HEADER CARTE -->
+            <div class="bg-navy p-6 sm:p-8 text-white flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                <div>
+                    <span class="text-xs uppercase font-bold text-brandOrange tracking-wider">Information de suivi</span>
+                    <h1 class="text-2xl sm:text-3xl font-display font-extrabold mt-1">
+                        Tracking ID : <span class="text-white">{{ colis.tracking_id }}</span>
+                    </h1>
+                </div>
+                <div>
+                    {% if colis.est_livre %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-green-500 text-white shadow-md">
+                            ✓ LIVRÉ
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-brandOrange text-navy shadow-md">
+                            ⏳ EN COURS DE TRANSPORT
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- CONTENU DETAILS -->
+            <div class="p-6 sm:p-8 space-y-8">
+                
+                <!-- GRILLE DES DETAILS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium uppercase">Description du contenu</p>
+                        <p class="text-gray-900 font-semibold text-base mt-1">{{ colis.description }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium uppercase">Poids estimé</p>
+                        <p class="text-gray-900 font-semibold text-base mt-1">{{ colis.poids if colis.poids else 'N/A' }} lbs</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium uppercase">Quantité</p>
+                        <p class="text-gray-900 font-semibold text-base mt-1">{{ colis.quantite }} article(s)</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium uppercase">Voyage associé</p>
+                        <p class="text-gray-900 font-semibold text-base mt-1">
+                            {{ colis.voyage.nom if colis.voyage else 'Non assigné' }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium uppercase">Date de départ USA</p>
+                        <p class="text-gray-900 font-semibold text-base mt-1">
+                            {{ colis.voyage.date_depart.strftime('%d/%m/%Y') if colis.voyage else 'En attente' }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium uppercase">Arrivée estimée Haïti</p>
+                        <p class="text-brandBlue font-bold text-base mt-1">
+                            {{ colis.voyage.date_arrivee_estimee.strftime('%d/%m/%Y') if colis.voyage else 'En attente' }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- AFFICHAGE SPECIAL DATE DE LIVRAISON -->
+                {% if colis.est_livre %}
+                    <div class="bg-green-50 border border-green-200 p-6 rounded-2xl flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-green-900 text-lg">Colis livré avec succès</h4>
+                            <p class="text-sm text-green-700 mt-0.5">La remise en main propre a été enregistrée par notre équipe.</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-bold text-green-800 uppercase">Horodatage serveur</p>
+                            <p class="text-sm font-semibold text-green-900">📅 {{ colis.date_livraison.strftime('%d/%m/%Y') }}</p>
+                            <p class="text-xs text-green-800">🕒 {{ colis.date_livraison.strftime('%H:%M UTC') }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- TIMELINE DES 4 ÉTAPES -->
+                <div>
+                    <h3 class="font-display font-bold text-lg text-navy mb-6">Évolution de l'acheminement</h3>
+                    
+                    {% set step = colis.etape_suivi %}
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+                        
+                        <!-- Etape 1 -->
+                        <div class="p-4 rounded-xl border {{ 'bg-brandBlue text-white border-brandBlue shadow-md' if step >= 1 else 'bg-gray-50 text-gray-400 border-gray-200' }}">
+                            <div class="text-xs font-bold uppercase mb-1">Étape 01</div>
+                            <div class="font-bold text-base">Colis reçu</div>
+                            <p class="text-xs mt-2 {{ 'text-blue-100' if step >= 1 else 'text-gray-400' }}">Entrepôt USA</p>
+                        </div>
+
+                        <!-- Etape 2 -->
+                        <div class="p-4 rounded-xl border {{ 'bg-brandBlue text-white border-brandBlue shadow-md' if step >= 2 else 'bg-gray-50 text-gray-400 border-gray-200' }}">
+                            <div class="text-xs font-bold uppercase mb-1">Étape 02</div>
+                            <div class="font-bold text-base">En route</div>
+                            <p class="text-xs mt-2 {{ 'text-blue-100' if step >= 2 else 'text-gray-400' }}">Transport maritime</p>
+                        </div>
+
+                        <!-- Etape 3 -->
+                        <div class="p-4 rounded-xl border {{ 'bg-brandBlue text-white border-brandBlue shadow-md' if step >= 3 else 'bg-gray-50 text-gray-400 border-gray-200' }}">
+                            <div class="text-xs font-bold uppercase mb-1">Étape 03</div>
+                            <div class="font-bold text-base">En Haïti</div>
+                            <p class="text-xs mt-2 {{ 'text-blue-100' if step >= 3 else 'text-gray-400' }}">Au port / Dédouanement</p>
+                        </div>
+
+                        <!-- Etape 4 -->
+                        <div class="p-4 rounded-xl border {{ 'bg-green-600 text-white border-green-600 shadow-md' if step == 4 else 'bg-gray-50 text-gray-400 border-gray-200' }}">
+                            <div class="text-xs font-bold uppercase mb-1">Étape 04</div>
+                            <div class="font-bold text-base">Livré</div>
+                            <p class="text-xs mt-2 {{ 'text-green-100' if step == 4 else 'text-gray-400' }}">Remis au client</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    {% else %}
+        <!-- ERREUR COLIS INTROUVABLE -->
+        <div class="bg-white rounded-3xl p-8 sm:p-12 text-center shadow-xl border border-gray-100 max-w-2xl mx-auto">
+            <div class="w-20 h-20 bg-red-100 text-red-600 font-bold rounded-full flex items-center justify-center mx-auto text-3xl mb-6">
+                🔍
+            </div>
+            <h2 class="font-display font-extrabold text-2xl text-navy mb-2">Colis introuvable</h2>
+            <p class="text-gray-600 text-sm mb-6">
+                Aucun colis n'a été trouvé pour le Tracking ID : <strong class="text-red-600">{{ search_id }}</strong>.<br>Vérifiez votre code de suivi et réessayez.
+            </p>
+            
+            <form action="{{ url_for('main.index') }}" method="POST" class="max-w-md mx-auto flex gap-2">
+                <input type="text" name="tracking_id" required value="{{ search_id }}" class="flex-grow px-4 py-3 bg-gray-100 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue">
+                <button type="submit" class="bg-brandOrange hover:bg-yellow-600 text-navy font-bold px-6 py-3 rounded-xl text-sm transition">
+                    RECHERCHER
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

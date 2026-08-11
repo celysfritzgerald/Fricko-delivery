@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+        <div>
+            <h1 class="font-display font-extrabold text-3xl text-navy">Utilisateurs Internes</h1>
+            <p class="text-sm text-gray-500 mt-1">Gestion exclusive ADMIN pour les accès système.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('main.user_create') }}" class="inline-flex items-center bg-brandOrange hover:bg-yellow-600 text-navy font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">
+                + Nouvel Utilisateur
+            </a>
+        </div>
+    </div>
+
+    {% if action in ['create', 'edit'] %}
+        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-gray-100 mb-10 max-w-xl">
+            <h2 class="font-display font-bold text-xl text-navy mb-6">
+                {{ 'Créer un compte interne' if action == 'create' else 'Modifier ' ~ user.nom }}
+            </h2>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nom complet *</label>
+                    {{ form.nom(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Adresse email *</label>
+                    {{ form.email(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                    {% for error in form.email.errors %}
+                        <span class="text-xs text-red-600 mt-1 block">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">
+                        Mot de passe {{ '(laisser vide si inchangé)' if action == 'edit' else '*' }}
+                    </label>
+                    {{ form.password(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Rôle *</label>
+                        {{ form.role(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                    </div>
+                    <div class="flex items-center pt-6">
+                        <label class="flex items-center cursor-pointer">
+                            {{ form.is_active(class="h-4 w-4 text-brandBlue rounded border-gray-300 focus:ring-brandBlue") }}
+                            <span class="ml-2 text-sm font-semibold text-gray-700">Compte Actif</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button type="submit" class="bg-brandBlue text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-blue-900 transition">
+                        Enregistrer
+                    </button>
+                    <a href="{{ url_for('main.users_list') }}" class="text-sm text-gray-500 hover:text-navy">Annuler</a>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-x-auto">
+        <table class="w-full text-left text-sm text-gray-600">
+            <thead class="bg-gray-50 text-xs uppercase font-bold text-navy border-b border-gray-200">
+                <tr>
+                    <th class="p-4">Nom</th>
+                    <th class="p-4">Email</th>
+                    <th class="p-4">Rôle</th>
+                    <th class="p-4">Statut</th>
+                    <th class="p-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% if users %}
+                    {% for u in users %}
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="p-4 font-bold text-navy whitespace-nowrap">{{ u.nom }}</td>
+                        <td class="p-4 whitespace-nowrap">{{ u.email }}</td>
+                        <td class="p-4 whitespace-nowrap">
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-full {{ 'bg-red-100 text-red-800' if u.role == 'ADMIN' else 'bg-blue-100 text-blue-800' }}">
+                                {{ u.role }}
+                            </span>
+                        </td>
+                        <td class="p-4 whitespace-nowrap">
+                            {% if u.is_active %}
+                                <span class="text-xs text-green-600 font-bold">● Actif</span>
+                            {% else %}
+                                <span class="text-xs text-gray-400 font-bold">○ Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-right whitespace-nowrap space-x-2">
+                            <a href="{{ url_for('main.user_edit', id=u.id) }}" class="text-brandBlue font-bold text-xs">Éditer</a>
+                            {% if u.id != current_user.id %}
+                                <form action="{{ url_for('main.user_delete', id=u.id) }}" method="POST" class="inline" onsubmit="return confirm('Supprimer cet utilisateur ?')">
+                                    <button type="submit" class="text-red-600 font-bold text-xs ml-1">Supprimer</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

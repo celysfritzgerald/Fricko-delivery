@@ -1,0 +1,33 @@
+name: LOGITRACK CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 1. Récupération du code source
+      uses: actions/checkout@v4
+
+    - name: 2. Configuration de Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: 3. Installation des dépendances
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install pytest
+
+    - name: 4. Exécution des tests avec Pytest
+      env:
+        SECRET_KEY: "test-secret-key"
+        FLASK_ENV: "testing"
+      run: |
+        python -m pytest

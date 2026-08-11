@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+        <div>
+            <h1 class="font-display font-extrabold text-3xl text-navy">Gestion des Clients</h1>
+            <p class="text-sm text-gray-500 mt-1">Liste de vos expéditeurs et destinataires.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('main.client_create') }}" class="inline-flex items-center bg-brandOrange hover:bg-yellow-600 text-navy font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">
+                + Nouveau Client
+            </a>
+        </div>
+    </div>
+
+    {% if action in ['create', 'edit'] %}
+        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-gray-100 mb-10 max-w-xl">
+            <h2 class="font-display font-bold text-xl text-navy mb-6">
+                {{ 'Ajouter un Client' if action == 'create' else 'Modifier ' ~ client.prenom ~ ' ' ~ client.nom }}
+            </h2>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Prénom *</label>
+                        {{ form.prenom(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nom *</label>
+                        {{ form.nom(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Téléphone *</label>
+                        {{ form.telephone(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">E-mail</label>
+                        {{ form.email(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Adresse</label>
+                    {{ form.adresse(rows="2", class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button type="submit" class="bg-brandBlue text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-blue-900 transition">
+                        Enregistrer
+                    </button>
+                    <a href="{{ url_for('main.clients_list') }}" class="text-sm text-gray-500 hover:text-navy">Annuler</a>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-x-auto">
+        <table class="w-full text-left text-sm text-gray-600">
+            <thead class="bg-gray-50 text-xs uppercase font-bold text-navy border-b border-gray-200">
+                <tr>
+                    <th class="p-4">Client</th>
+                    <th class="p-4">Téléphone</th>
+                    <th class="p-4">Email</th>
+                    <th class="p-4">Colis associés</th>
+                    <th class="p-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% if clients %}
+                    {% for cl in clients %}
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="p-4 font-bold text-navy whitespace-nowrap">{{ cl.prenom }} {{ cl.nom }}</td>
+                        <td class="p-4 whitespace-nowrap">{{ cl.telephone }}</td>
+                        <td class="p-4 whitespace-nowrap">{{ cl.email if cl.email else '-' }}</td>
+                        <td class="p-4 whitespace-nowrap">
+                            <span class="px-2.5 py-1 text-xs font-bold bg-blue-50 text-brandBlue rounded-full">
+                                {{ cl.colis|length }} colis
+                            </span>
+                        </td>
+                        <td class="p-4 text-right whitespace-nowrap space-x-2">
+                            <a href="{{ url_for('main.client_edit', id=cl.id) }}" class="text-brandBlue font-bold text-xs">Éditer</a>
+                            {% if current_user.is_admin %}
+                                <form action="{{ url_for('main.client_delete', id=cl.id) }}" method="POST" class="inline" onsubmit="return confirm('Supprimer ce client ?')">
+                                    <button type="submit" class="text-red-600 font-bold text-xs ml-1">Supprimer</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-gray-400 text-sm">Aucun client enregistré.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

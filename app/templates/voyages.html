@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+        <div>
+            <h1 class="font-display font-extrabold text-3xl text-navy">Planning des Voyages</h1>
+            <p class="text-sm text-gray-500 mt-1">Gérez les départs de conteneurs/navires vers Haïti.</p>
+        </div>
+        {% if current_user.is_admin %}
+            <div>
+                <a href="{{ url_for('main.voyage_create') }}" class="inline-flex items-center bg-brandOrange hover:bg-yellow-600 text-navy font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-sm">
+                    + Nouveau Voyage
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if action in ['create', 'edit'] and current_user.is_admin %}
+        <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-gray-100 mb-10 max-w-xl">
+            <h2 class="font-display font-bold text-xl text-navy mb-6">
+                {{ 'Créer un Voyage' if action == 'create' else 'Modifier ' ~ voyage.nom }}
+            </h2>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nom du Voyage *</label>
+                    {{ form.nom(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Date Départ *</label>
+                        {{ form.date_depart(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Arrivée Estimée *</label>
+                        {{ form.date_arrivee_estimee(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Statut du Voyage *</label>
+                    {{ form.statut(class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue") }}
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button type="submit" class="bg-brandBlue text-white font-bold px-6 py-2.5 rounded-xl text-sm hover:bg-blue-900 transition">
+                        Enregistrer
+                    </button>
+                    <a href="{{ url_for('main.voyages_list') }}" class="text-sm text-gray-500 hover:text-navy">Annuler</a>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-x-auto">
+        <table class="w-full text-left text-sm text-gray-600">
+            <thead class="bg-gray-50 text-xs uppercase font-bold text-navy border-b border-gray-200">
+                <tr>
+                    <th class="p-4">Nom Voyage</th>
+                    <th class="p-4">Départ USA</th>
+                    <th class="p-4">Arrivée Estimée</th>
+                    <th class="p-4">Statut</th>
+                    <th class="p-4">Colis associés</th>
+                    {% if current_user.is_admin %}
+                        <th class="p-4 text-right">Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% if voyages %}
+                    {% for v in voyages %}
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="p-4 font-bold text-navy whitespace-nowrap">{{ v.nom }}</td>
+                        <td class="p-4 whitespace-nowrap">{{ v.date_depart.strftime('%d/%m/%Y') }}</td>
+                        <td class="p-4 whitespace-nowrap font-semibold text-brandBlue">{{ v.date_arrivee_estimee.strftime('%d/%m/%Y') }}</td>
+                        <td class="p-4 whitespace-nowrap">
+                            {% if v.statut == 'EN_HAITI' %}
+                                <span class="px-2.5 py-1 text-xs font-bold bg-green-100 text-green-800 rounded-full">Arrivé en Haïti</span>
+                            {% elif v.statut == 'EN_ROUTE' %}
+                                <span class="px-2.5 py-1 text-xs font-bold bg-blue-100 text-blue-800 rounded-full">En Route</span>
+                            {% else %}
+                                <span class="px-2.5 py-1 text-xs font-bold bg-gray-100 text-gray-800 rounded-full">En Préparation</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 whitespace-nowrap">
+                            <span class="px-2.5 py-1 text-xs font-bold bg-gray-100 text-gray-700 rounded-full">
+                                {{ v.colis|length }} colis
+                            </span>
+                        </td>
+                        {% if current_user.is_admin %}
+                            <td class="p-4 text-right whitespace-nowrap space-x-2">
+                                <a href="{{ url_for('main.voyage_edit', id=v.id) }}" class="text-brandBlue font-bold text-xs">Éditer</a>
+                                <form action="{{ url_for('main.voyage_delete', id=v.id) }}" method="POST" class="inline" onsubmit="return confirm('Supprimer ce voyage ?')">
+                                    <button type="submit" class="text-red-600 font-bold text-xs ml-1">Supprimer</button>
+                                </form>
+                            </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-gray-400 text-sm">Aucun voyage planifié.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
