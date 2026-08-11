@@ -6,7 +6,6 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_mail import Mail
 from dotenv import load_dotenv
-
 # Charger les variables d'environnement (.env)
 load_dotenv()
 
@@ -51,13 +50,6 @@ def create_app():
     limiter.init_app(app)
     mail.init_app(app)
 
-
-    app.config.update(
-    SESSION_COOKIE_HTTPONLY=True,     # Empêche l'accès aux cookies via JavaScript (XSS)
-    SESSION_COOKIE_SECURE=True,       # Force l'envoi des cookies uniquement via HTTPS
-    REMEMBER_COOKIE_HTTPONLY=True,
-    REMEMBER_COOKIE_SECURE=True,
-)
 
     # -------------------------------------------------------------
     # INJECTEUR DE CONTEXTE GLOBAL
