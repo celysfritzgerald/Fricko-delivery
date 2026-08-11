@@ -43,11 +43,21 @@ def create_app():
     app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', os.environ.get('MAIL_USERNAME'))
     app.config['MAIL_RECIPIENT'] = os.environ.get('MAIL_RECIPIENT', os.environ.get('MAIL_USERNAME'))
 
+    
+
     # Liaison des extensions à l'instance Flask
     db.init_app(app)
     login_manager.init_app(app)
     limiter.init_app(app)
     mail.init_app(app)
+
+
+    app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,     # Empêche l'accès aux cookies via JavaScript (XSS)
+    SESSION_COOKIE_SECURE=True,       # Force l'envoi des cookies uniquement via HTTPS
+    REMEMBER_COOKIE_HTTPONLY=True,
+    REMEMBER_COOKIE_SECURE=True,
+)
 
     # -------------------------------------------------------------
     # INJECTEUR DE CONTEXTE GLOBAL
